@@ -1,0 +1,42 @@
+input[type=text],
+input[type=date],
+input[type=email] {
+    height: 40px;
+    width: 100%;
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box;
+    padding-left: 16px;
+    font: 13pt;
+    padding-top: 0;
+    line-height: 50px;
+}
+
+input[type=text]:focus,
+input[type=date]:focus,
+input[type=email] :focus,
+input:focus {
+    border-color: #019160;
+}
+
+input[type=text].input-search {
+    background-image: url('../../icon/search.png');
+    background-repeat: no-repeat;
+    background-position-y: center;
+    background-position-x: 16px;
+    background-size: 20px;
+    padding-left: 40px;
+}
+
+select:focus {
+    border-color: #019160;
+}
+
+.input-group .input-group-salary input {
+    text-align: right;
+}
+
+.redLine {
+    border: 1px solid red !important;
+}

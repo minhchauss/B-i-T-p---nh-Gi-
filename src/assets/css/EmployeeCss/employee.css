@@ -1,0 +1,150 @@
+.page-title {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-title .page-right {
+    right: 24px;
+}
+
+.page-title .page-left {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.toolbar {
+    margin-top: 16px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    height: 42px;
+    /* background-color: #ff0000; */
+    justify-content: space-between;
+}
+
+.toolbarButton {
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toolbarSelect {
+    display: flex;
+}
+
+.toolbarSelect input {
+    margin-right: 10px;
+}
+
+.grid {
+    position: absolute;
+    right: 24px;
+    left: 24px;
+    bottom: 60px;
+    top: 128px;
+    overflow-y: auto;
+}
+
+.paging {
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+    left: 24px;
+    right: 24px;
+}
+
+.m-col {
+    float: left;
+    padding: 0;
+    box-sizing: border-box;
+    padding: 0;
+    width: 49%;
+}
+
+.tittleDialog {
+    margin: 0;
+    text-align: left;
+    top: 0;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.m-row {
+    width: 100%;
+    display: flex;
+    position: relative;
+    margin-top: 16px;
+    justify-content: space-between;
+}
+
+.m-row label {
+    display: block;
+    float: left;
+}
+
+option:hover {
+    background: #313336 !important;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table tr {
+    border-bottom: 1px solid #bbb;
+    height: 48px;
+}
+
+table thead th {
+    text-align: center;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    border-bottom: 1px solid #bbb;
+    box-shadow: 0 1px 1px -1px #bbb;
+}
+
+table thead {
+    border-bottom: 1px solid #bbb;
+}
+
+tbody tr td {
+    text-align: left;
+}
+
+th,
+td {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+th:first-child,
+th:last-child,
+td:first-child,
+td:last-child {
+    padding-left: 16px;
+}
+
+table tr {
+    cursor: pointer;
+}
+
+.hightlight {
+    background: #019160;
+    outline: none;
+    color: #ffffff;
+}
+
+#btnAdd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#btnAdd img {
+    vertical-align: middle;
+    margin-right: 10px;
+}

@@ -1,0 +1,15 @@
+.notic-dialog {
+    position: absolute;
+    bottom: 0;
+    width: 200px;
+    right: 0;
+    height: 40px;
+    background-color: rgb(144, 176, 206);
+    z-index: 1;
+    box-shadow: 1px 0 5px;
+}
+
+.notic-dialog p {
+    font-size: 13px;
+    font-weight: 700;
+}
