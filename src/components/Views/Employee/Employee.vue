@@ -12,53 +12,10 @@
     </div>
     <div class="toolbar">
       <div class="toolbarSelect">
-        <div>
-          <input
-            type="text"
-            class="input-search"
-            style="width: 255px"
-            placeholder="Tìm kiếm theo mã, tên nhân viên"
+        <Combobox 
+          :departments="departments"
+          :positions="positions"
           />
-        </div>
-        <div class="combobox">
-          <div class="combobox-selected-item">{{ selectedDepartmentname }}</div>
-          <div class="combobox-content">
-            <div class="combobox-list">
-              <div class="combobox-item" tabindex="1" @click="loadDataDepartment()">Tất cả phòng ban</div>
-              <div
-                class="combobox-item"
-                v-for="item in departments"
-                :key="item.DepartmentId"
-                tabindex="1"
-                @click="selectNameDepartment(item.DepartmentName)"
-                
-              >
-                {{ item.DepartmentName }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="combobox">
-          <div class="combobox-selected-item">{{ selectedPositionName }}</div>
-          <div class="combobox-content">
-            <div class="combobox-list">
-              <div class="combobox-item" tabindex="1" @click="loadDataPosition()">Tất cả vị trí</div>
-              <div
-                class="combobox-item"
-                v-for="item in positions"
-                :key="item.PositionId"
-                tabindex="1"
-                @click="selectNamePosition(item.PositionName)"
-              >
-                {{ item.PositionName }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="combobox-position">
-          <ejs-combobox :dataSource="dataPosition" :fields="dataFieldsPosition">
-          </ejs-combobox>
-        </div> -->
       </div>
 
       <div class="toolbarButton">
@@ -160,6 +117,7 @@ import Pagination from "../../Commons/Pagination.vue";
 import moment from "moment";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import Noticfication from '../../Commons/Noticfication.vue';
+import Combobox from './Combobox.vue'
 const baseURL="http://api.manhnv.net/v1";
 export default {
   components: {
@@ -167,6 +125,7 @@ export default {
     DialogConfirm,
     Pagination,
     Noticfication,
+    Combobox,
   },
   props: {
     
