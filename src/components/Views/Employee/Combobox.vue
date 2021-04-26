@@ -27,7 +27,7 @@
               'out-line-input-department': outLineDepartment,
             }"
           >
-            <font-awesome-icon :icon="icon" />
+            <font-awesome-icon :icon="['fas', 'angle-down']" />
           </div>
         </div>
         <div
@@ -55,10 +55,11 @@
                 highlight: item.DepartmentName == selectedDepartmentname,
               }"
             >
-            <div
-              class="icon-down-list" >
-                <font-awesome-icon :icon="iconCheck" />
-              </div>
+              <font-awesome-icon
+                class="icon-down-list"
+                :icon="['fas', 'check']"
+              />
+
               {{ item.DepartmentName }}
             </div>
           </div>
@@ -66,6 +67,7 @@
       </div>
       <div class="combobox">
         <div class="combobox-selected-item">
+          <!------------------Input nhập --------------------->
           <input
             type="text"
             tabindex="-1"
@@ -73,25 +75,37 @@
               'out-line-input-position': outLinePosition,
             }"
             v-model="selectedPositionName"
+            @input="filterPositionName()"
           />
+          <!----------------Icon xổ ra list---------- ------------>
           <div
             class="icon-down"
             tabindex="-1"
-            @click="focusIconDownPosition()"
+            @click="clickIconDownPosition()"
             v-bind:class="{
               'out-line-input-position': outLinePosition,
             }"
           >
-            <font-awesome-icon :icon="icon" />
+            <!------------ ------------>
+            <font-awesome-icon :icon="['fas', 'angle-down']" />
           </div>
         </div>
+        <!---------------------Nội dung list------------------------->
         <div
           class="combobox-content"
           tabindex="-1"
-          v-bind:class="{ 'show-combobox-list-position': showCbbListPosition }"
-          @focusout="unFocusListPosition()"
+          :class="{ 'show-combobox-list-position': showCbbListPosition }"
         >
-          <div class="combobox-list" tabindex="-1">
+          <!------------------------------------------------>
+
+          <div
+            class="combobox-list"
+            tabindex="-1"
+            @focusout="unFocusListPosition()"
+            v-if="filterPositionName"
+          >
+            <!-------------------Chọn tất cả----------------------------->
+
             <div
               :class="{ 'hide-position-name': isHidePosition }"
               class="combobox-item"
@@ -100,21 +114,49 @@
             >
               Tất cả vị trí
             </div>
-            <div
-              v-for="item in positions"
-              :key="item.PositionId"
-              class="combobox-item"
-              tabindex="1"
-              @click="selectNamePosition(item.PositionName)"
-              :class="{ highlight: item.PositionName == selectedPositionName }"
-            >
+            <!-------------------Binding tên vị trí----------------------------->
+            <div v-if="filterPositionInput">
               <div
-              class="icon-down-list" >
-                <font-awesome-icon :icon="iconCheck" />
+                v-for="item in filterPositionInput"
+                :key="item.PositionId"
+                class="combobox-item"
+                tabindex="1"
+                @click="selectNamePosition(item.PositionName)"
+                :class="{
+                  highlight: item.PositionName == selectedPositionName,
+                }"
+              >
+                <font-awesome-icon
+                  class="icon-down-list"
+                  :icon="['fas', 'check']"
+                />
+                <!---------------------Tên vị trí--------------------------->
+
+                <div>{{ item.PositionName }}</div>
               </div>
-              <div>{{ item.PositionName }}</div>
+              <!-- <div>{{ item.PositionName }}</div> -->
             </div>
           </div>
+        </div>
+      </div>
+      <div class="about">
+        <input
+          type="text"
+          class="br-gray-300 px-4 py-2"
+          v-model="state"
+          autocomplete="off"
+          @input="filterStates()"
+        />
+        <div v-if="filteredStates" class="filter-state">
+          <ul>
+            <li
+              v-for="item in filteredStates"
+              :key="item"
+              @click="setState(item)"
+            >
+              {{ item }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -123,13 +165,24 @@
 
 <script>
 export default {
+  created() {
+    this.setValueInput();
+  },
   computed: {
-    icon() {
-      return ["fas", "angle-down"];
-    },
-    iconCheck() {
-      return ["fas", "check"];
-    },
+    // filteredPosition() {
+    //   function compare(a, b) {
+    //     if (a.PositionName < b.PositionName) return -1;
+    //     if (a.PositionName > b.PositionName) return 1;
+    //     return 0;
+    //   }
+    //   return this.dataPo
+    //     .filter((item) => {
+    //       return item.PositionName.toLowerCase().includes(
+    //         this.selectedPositionName.toLowerCase()
+    //       );
+    //     })
+    //     .sort(compare);
+    // },
   },
   props: {
     departments: {
@@ -140,44 +193,80 @@ export default {
       typy: Object,
       default: [],
     },
+    icon: {
+      default: "",
+    },
   },
   data() {
     return {
       selectDepartmentId: null,
       selectPositionId: null,
-      selectedDepartmentname: "Tất cả phòng ban",
-      selectedPositionName: "Tất cả vị trí",
+      selectedDepartmentname: "",
       outLineDepartment: false,
       showCbbList: false,
-      nameDepartment: null,
-      namePosition: null,
+      nameDepartment: "",
+      namePosition: "",
       outLinePosition: false,
       showCbbListPosition: false,
-      isHidePosition: true,
       isHideDepartment: true,
+      isHidePosition: true,
       selectedRowPositionId: null,
-      checkIcon:true,
-      hideCheckIcon:true,
+      checkIcon: true,
+      hideCheckIcon: true,
+      state: "",
+      states: ["alabama", "texsas", "alaska", "Frorida"],
+      filteredStates: [],
+      selectedPositionName: "",
+      dataPo: this.positions,
+      filterPositionInput: [],
     };
   },
   methods: {
+    /**
+     * Lấy danh sách tên vị trí
+     */
+    setValueInput() {
+      this.selectedDepartmentname = "Tất cả phòng ban";
+      this.selectedPositionName = "Tất cả vị trí";
+      this.dataPo=this.positions;
+      this.filterPositionName()
+      this.showCbbListPosition=false;
+    },
+    /**
+     * Autocomplete vị trí
+     */
+    filterPositionName() {
+      this.showCbbListPosition=true;
+      this.filterPositionInput = this.dataPo.filter((item) => {
+        return item.PositionName.toLowerCase().includes(
+          this.selectedPositionName.toLowerCase()
+        )
+      });
+    },
+    filterStates() {
+      this.filteredStates = this.states.filter((state) => {
+        return state.toLowerCase().startsWith(this.state.toLowerCase());
+      });
+    },
     /**
      * Click vào icon down phòng ban
      */
     focusIconDown() {
       // Hiện border input
-      this.outLineDepartment = true;
+      this.outLineDepartment = !this.outLineDepartment;
       // Hiện list phòng ban
       this.showCbbList = !this.showCbbList;
     },
     /**
      * Click vào icon down vị trí
      */
-    focusIconDownPosition() {
+    clickIconDownPosition() {
       // Hiện border input
       this.outLinePosition = true;
       // Toggle list vị trí
       this.showCbbListPosition = !this.showCbbListPosition;
+
+      this.dataPo=this.positions;
     },
     /**
      * Sau khi bấm ra ngoài combobox phòng ban
@@ -224,6 +313,8 @@ export default {
       this.showCbbList = false;
       // Hiển thị dòng "Tất cả vị trí"
       this.isHideDepartment = false;
+
+      this.outLineDepartment = false;
     },
     // Binding tên vị trí
     selectNamePosition(name) {
@@ -234,7 +325,7 @@ export default {
       // Hiển thị dòng "Tất cả vị trí"
       this.isHidePosition = false;
       // Thêm dấu tick
-      this.hideCheckIcon=false
+      this.hideCheckIcon = false;
     },
     /**
      *Chọn tất cả phòng ban
@@ -315,8 +406,8 @@ export default {
 }
 
 .icon-down-list {
-  height: 30px;
-  width: 30px;
+  height: 20px;
+  width: 20px;
   outline: none;
   position: absolute;
   left: 0;
@@ -324,12 +415,20 @@ export default {
   justify-content: center;
   align-items: center;
   color: #ffffff;
-  font-size: 150%;
+  padding-left: 2px;
   padding-right: 10px;
 }
 
-.hide-check-icon{
+.hide-check-icon {
   display: none;
 }
 
+.filter-state {
+  position: absolute;
+  z-index: 10;
+  background: #70dfba;
+  height: 40px;
+  width: 100px;
+  color: #fff;
+}
 </style>

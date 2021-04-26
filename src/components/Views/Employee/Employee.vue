@@ -327,6 +327,7 @@ export default {
     getPositionData() {
       axios.get(`${baseURL}/Positions`).then((res) => {
         this.positions = res.data;
+        this.positionName=this.positions.PositionName
       });
     },
     /**
@@ -447,6 +448,7 @@ export default {
       },
       messageNotification:"",
       showNotic:true,
+      positionName:[],
     };
   },
 };

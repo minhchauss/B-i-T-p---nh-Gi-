@@ -730,9 +730,11 @@ export default {
 
 
 <style scoped>
-@import url(../../../assets/css/CommonCss/dialog.css);
 @import url(../../../assets/css/EmployeeCss/employee.css);
+@import url(../../../assets/css/CommonCss/dialog.css);
+@import url(../../../assets/css/CommonCss/select.css);
 .m-col select:hover {
   background-color: #e9ebee;
 }
+
 </style>
