@@ -18,6 +18,7 @@
               'out-line-input-department': outLineDepartment,
             }"
             v-model="selectedDepartmentname"
+            @input="filterDepartmentName()"
           />
           <div
             class="icon-down"
@@ -43,24 +44,27 @@
               @click="loadDataDepartment()"
               :class="{ 'hide-department-name': isHideDepartment }"
             >
-              Tất cả phòng ban
+              <div class="text-position">Tất cả phòng ban</div>
             </div>
-            <div
-              v-for="item in departments"
-              :key="item.DepartmentId"
-              class="combobox-item"
-              tabindex="1"
-              @click="selectNameDepartment(item.DepartmentName)"
-              :class="{
-                highlight: item.DepartmentName == selectedDepartmentname,
-              }"
-            >
-              <font-awesome-icon
-                class="icon-down-list"
-                :icon="['fas', 'check']"
-              />
-
-              {{ item.DepartmentName }}
+            <div v-if="filterDepartmentInput">
+              <div
+                v-for="item in filterDepartmentInput"
+                :key="item.DepartmentId"
+                class="combobox-item"
+                tabindex="1"
+                @click="selectNameDepartment(item.DepartmentName)"
+                :class="{
+                  highlight: item.DepartmentName == selectedDepartmentname,
+                }"
+              >
+                <font-awesome-icon
+                  class="icon-down-list"
+                  :icon="['fas', 'check']"
+                />
+                <div class="text-position">
+                  {{ item.DepartmentName }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -73,6 +77,7 @@
             tabindex="-1"
             v-bind:class="{
               'out-line-input-position': outLinePosition,
+              'error-outline-position': errOutline,
             }"
             v-model="selectedPositionName"
             @input="filterPositionName()"
@@ -84,6 +89,7 @@
             @click="clickIconDownPosition()"
             v-bind:class="{
               'out-line-input-position': outLinePosition,
+              'error-outline-position': errOutline,
             }"
           >
             <!------------ ------------>
@@ -110,9 +116,9 @@
               :class="{ 'hide-position-name': isHidePosition }"
               class="combobox-item"
               tabindex="-1"
-              @click="loadDataPosition()"
+              @click.enter="loadDataPosition()"
             >
-              Tất cả vị trí
+              <div class="text-position">Tất cả vị trí</div>
             </div>
             <!-------------------Binding tên vị trí----------------------------->
             <div v-if="filterPositionInput">
@@ -132,7 +138,7 @@
                 />
                 <!---------------------Tên vị trí--------------------------->
 
-                <div>{{ item.PositionName }}</div>
+                <div class="text-position">{{ item.PositionName }}</div>
               </div>
               <!-- <div>{{ item.PositionName }}</div> -->
             </div>
@@ -165,8 +171,13 @@
 
 <script>
 export default {
+  mounted() {
+    // document.addEventListener("keyup", this.nextItem);
+  },
   created() {
     this.setValueInput();
+    this.filterPositionInput = this.positions;
+    this.filterDepartmentInput=this.departments;
   },
   computed: {
     // filteredPosition() {
@@ -203,10 +214,11 @@ export default {
       selectPositionId: null,
       selectedDepartmentname: "",
       outLineDepartment: false,
+      outLinePosition: false,
+      errOutline: false,
       showCbbList: false,
       nameDepartment: "",
       namePosition: "",
-      outLinePosition: false,
       showCbbListPosition: false,
       isHideDepartment: true,
       isHidePosition: true,
@@ -219,30 +231,70 @@ export default {
       selectedPositionName: "",
       dataPo: this.positions,
       filterPositionInput: [],
+      filterDepartmentInput: [],
+      value: 1,
+      dataDe: this.departments,
     };
   },
   methods: {
     /**
+     * Điều hướng bằng mũi tên
+     */
+    // nextItem(e) {
+    //   if (e.keyCode == 38 && this.value > 1) {
+    //     this.value--;
+    //   } else if (e.keyCode == 40 && this.value < 3) {
+    //     this.value++;
+    //   }
+    // },
+    /**
      * Lấy danh sách tên vị trí
+     * Created by CMChau 26/4/2021
      */
     setValueInput() {
       this.selectedDepartmentname = "Tất cả phòng ban";
       this.selectedPositionName = "Tất cả vị trí";
-      this.dataPo=this.positions;
-      this.filterPositionName()
-      this.showCbbListPosition=false;
+      this.dataPo = this.positions;
+      this.filterPositionName();
+      this.showCbbListPosition = false;
+      this.filterDepartmentName();
+      this.showCbbList=false;
+      this.dataDe=this.departments;
     },
     /**
      * Autocomplete vị trí
+     * Created by CMChau 26/4/2021
      */
     filterPositionName() {
-      this.showCbbListPosition=true;
+      this.isHidePosition = false;
+      this.showCbbListPosition = true;
+      this.dataPo = this.positions;
       this.filterPositionInput = this.dataPo.filter((item) => {
         return item.PositionName.toLowerCase().includes(
           this.selectedPositionName.toLowerCase()
-        )
+        );
       });
     },
+    /**
+     * AutoComplete phòng ban
+     * Created by CMChau 26/4/2021
+     */
+    filterDepartmentName() {
+      //hiện list
+      this.isHideDepartment = false;
+      this.showCbbList = true;
+      //gán data department
+      this.dataDe = this.departments;
+      //thực hiện filter
+      this.filterDepartmentInput = this.dataDe.filter((item) => {
+        return item.DepartmentName.toLowerCase().includes(
+          this.selectedDepartmentname.toLowerCase()
+        );
+      });
+    },
+    /**
+     * Filter test
+     */
     filterStates() {
       this.filteredStates = this.states.filter((state) => {
         return state.toLowerCase().startsWith(this.state.toLowerCase());
@@ -262,11 +314,9 @@ export default {
      */
     clickIconDownPosition() {
       // Hiện border input
-      this.outLinePosition = true;
+      this.outLinePosition = !this.outLinePosition;
       // Toggle list vị trí
       this.showCbbListPosition = !this.showCbbListPosition;
-
-      this.dataPo=this.positions;
     },
     /**
      * Sau khi bấm ra ngoài combobox phòng ban
@@ -318,10 +368,10 @@ export default {
     },
     // Binding tên vị trí
     selectNamePosition(name) {
-      // Ẩn list vị trí
-      this.showCbbListPosition = false;
       // Gán tên vị trí
       this.selectedPositionName = name;
+      // Ẩn list vị trí
+      this.showCbbListPosition = false;
       // Hiển thị dòng "Tất cả vị trí"
       this.isHidePosition = false;
       // Thêm dấu tick
@@ -406,8 +456,8 @@ export default {
 }
 
 .icon-down-list {
-  height: 20px;
-  width: 20px;
+  height: 15px;
+  width: 15px;
   outline: none;
   position: absolute;
   left: 0;
@@ -415,7 +465,7 @@ export default {
   justify-content: center;
   align-items: center;
   color: #ffffff;
-  padding-left: 2px;
+  padding-left: 10px;
   padding-right: 10px;
 }
 
@@ -430,5 +480,9 @@ export default {
   height: 40px;
   width: 100px;
   color: #fff;
+}
+
+.error-outline-position {
+  border-color: red;
 }
 </style>

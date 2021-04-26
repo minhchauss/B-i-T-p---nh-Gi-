@@ -73,10 +73,13 @@
     position: relative;
     outline: none;
     display: flex;
-    justify-content: center;
     align-items: center;
   }
   
+  .text-position{
+    margin-left: 40px;
+  }
+
   .combobox-item:hover {
     background-color: #E5E5E5  !important;
   }
