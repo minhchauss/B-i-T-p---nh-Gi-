@@ -10,7 +10,7 @@
         />
       </div>
       <div class="combobox">
-        <div class="combobox-selected-item">
+        <div class="combobox-selected-item" id="combobox-department">
           <!----------------------input nhập department---------------------------------->
           <input
             type="text"
@@ -22,6 +22,7 @@
             v-model="selectedDepartmentname"
             @input="filterDepartmentName()"
             @focus="clearDataDepartmentInput"
+            @focusout="focusOutInputDepartment"
           />
           <!------------------------icon xổ ra list-------------------------------->
           <div
@@ -33,6 +34,12 @@
               'error-outline-department': errOutlineDepartment,
             }"
           >
+           <div
+              class="tooltip-text"
+              :class="{ 'tooltip-text-department': tooltipDepartment }"
+            >
+              Dữ liệu không tồn tại trong hệ thống
+            </div>
             <font-awesome-icon :icon="['fas', 'angle-down']" />
           </div>
         </div>
@@ -56,7 +63,7 @@
             <!----------------------item list phòng ban---------------------------------->
             <div v-if="filterDepartmentInput">
               <div
-              ref="test"
+                ref="test"
                 v-for="item in filterDepartmentInput"
                 :key="item.DepartmentId"
                 class="combobox-item"
@@ -66,7 +73,7 @@
                   highlight: item.DepartmentName == selectedDepartmentname,
                 }"
               >
-              <!--------------------------icon tick------------------------------>
+                <!--------------------------icon tick------------------------------>
                 <font-awesome-icon
                   class="icon-down-list"
                   :icon="['fas', 'check']"
@@ -80,7 +87,7 @@
         </div>
       </div>
       <div class="combobox">
-        <div class="combobox-selected-item">
+        <div class="combobox-selected-item" id="combobox-position">
           <!------------------Input nhập --------------------->
           <input
             type="text"
@@ -94,6 +101,7 @@
             @focus="clearDataPositionInput()"
             @focusout="focusOutInputPosition()"
           />
+
           <!----------------Icon xổ ra list---------- ------------>
           <div
             class="icon-down"
@@ -103,8 +111,13 @@
               'out-line-input-position': outLinePosition,
               'error-outline-position': errOutline,
             }"
-             
           >
+            <div
+              class="tooltip-text"
+              :class="{ 'tooltip-text-position': tooltipPosition }"
+            >
+              Dữ liệu không tồn tại trong hệ thống
+            </div>
             <!------------ ------------>
             <font-awesome-icon :icon="['fas', 'angle-down']" />
           </div>
@@ -187,12 +200,12 @@ export default {
   mounted() {
     // document.addEventListener("keyup", this.nextItem);
     this.filterPositionInput = this.positions;
-    this.filterDepartmentInput=this.departments;
+    this.filterDepartmentInput = this.departments;
   },
   created() {
     this.setValueInput();
     this.filterPositionInput = this.positions;
-    this.filterDepartmentInput=this.departments;
+    this.filterDepartmentInput = this.departments;
   },
   computed: {
     // filteredPosition() {
@@ -231,7 +244,7 @@ export default {
       outLineDepartment: false,
       outLinePosition: false,
       errOutline: false,
-      errOutlineDepartment:false,
+      errOutlineDepartment: false,
       showCbbList: false,
       nameDepartment: "",
       namePosition: "",
@@ -248,8 +261,9 @@ export default {
       filterPositionInput: [],
       filterDepartmentInput: [],
       value: 1,
-      defaultPositionName:"Tất cả vị trí",
-        
+      defaultPositionName: "Tất cả vị trí",
+      tooltipPosition: true,
+      tooltipDepartment:true,
     };
   },
   methods: {
@@ -286,41 +300,66 @@ export default {
     //   this.isOpen = true
     //   this.filteredUsers.push(...filtered)
 
-
     //   console.log(this.filteredUsers)
     // },
+
+
+    /**
+     * Validate combobox
+     * Createdby CMChau 27/4/2021
+     */
+    //Position
+    focusOutInputPosition() {
+      if (this.selectedPositionName != this.filterPositionInput) 
+        //Viền báo lỗi
+        this.errOutline = true;
+        //Thông báo lỗi khi hover
+        this.tooltipPosition = false;
+      
+      
+    },
+    //Department
+    focusOutInputDepartment() {
+      if (this.selectedDepartmentname != this.filterDepartmentInput)
+      //Hiện viền báo lỗi
+        this.errOutlineDepartment = true;
+        //Hiển thị thông báo lối khi hover
+        this.tooltipDepartment=false;
+    },
     /**
      * Clear data khi focus vào input posiiton
+     * Createdby CMChau 27/4/2021
      */
-    clearDataPositionInput(){
-      this.selectedPositionName="";
+    clearDataPositionInput() {
+      this.selectedPositionName = "";
     },
     /**
      * Clear data khi focus vào input department
+     * Createdby CMChau 27/4/2021
      */
-    clearDataDepartmentInput(){
-      this.selectedDepartmentname="";
+    clearDataDepartmentInput() {
+      this.selectedDepartmentname = "";
     },
     /**
-     * Điều hướng bằng mũi tên
+     * test Điều hướng bằng mũi tên
      */
-    test(event){
-      switch (event.keyCode){
+    test(event) {
+      switch (event.keyCode) {
         case 38:
-          if(this.filterPositionInput ===null){
-            this.filterPositionInput=0;
-          }else if(this.filterPositionInput>0){
+          if (this.filterPositionInput === null) {
+            this.filterPositionInput = 0;
+          } else if (this.filterPositionInput > 0) {
             this.filterPositionInput--;
           }
           break;
-          case 40:{
-            if(this.filterPositionInput===null){
-              this.filterPositionInput=0;
-            }else if(this.filterPositionInput<this.item.length -1){
-              this.filterPositionInput++;
-            }
-            break;
+        case 40: {
+          if (this.filterPositionInput === null) {
+            this.filterPositionInput = 0;
+          } else if (this.filterPositionInput < this.item.length - 1) {
+            this.filterPositionInput++;
           }
+          break;
+        }
       }
     },
     /**
@@ -333,7 +372,7 @@ export default {
       this.filterPositionName();
       this.showCbbListPosition = false;
       this.filterDepartmentName();
-      this.showCbbList=false;
+      this.showCbbList = false;
     },
     /**
      * Autocomplete vị trí
@@ -348,7 +387,6 @@ export default {
           this.selectedPositionName.toLowerCase()
         );
       });
-      
     },
     /**
      * AutoComplete phòng ban
@@ -377,6 +415,7 @@ export default {
     },
     /**
      * Click vào icon down phòng ban
+     *Createdby CMChau 26/4/2021
      */
     focusIconDown() {
       // Hiện border input
@@ -384,11 +423,11 @@ export default {
       // Hiện list phòng ban
       this.showCbbList = !this.showCbbList;
 
-      this.filterDepartmentInput=this.departments
-
+      this.filterDepartmentInput = this.departments;
     },
     /**
      * Click vào icon down vị trí
+     * Createdby CMChau 26/4/2021
      */
     clickIconDownPosition() {
       // Hiện border input
@@ -396,11 +435,11 @@ export default {
       // Toggle list vị trí
       this.showCbbListPosition = !this.showCbbListPosition;
 
-      this.filterPositionInput=this.positions
-
+      this.filterPositionInput = this.positions;
     },
     /**
      * Sau khi bấm ra ngoài combobox phòng ban
+     * Createdby CMChau 26/4/2021
      */
     unFocusList() {
       // Ẩn list phòng ban
@@ -410,20 +449,21 @@ export default {
     },
     /***
      * Sau khi bấm ra ngoài combobox vị trí
+     * Createdby CMChau 26/4/2021
      */
     unFocusListPosition() {
       // Ẩn list vị trí
       this.showCbbListPosition = false;
       // Ẩn border input
       this.outLinePosition = false;
-      
-      if(this.filterPositionInput==null||this.filterPositionInput==""){
-        this.errOutline=true;
-      }
-      else this.errOutline=false;
+
+      if (this.filterPositionInput == null || this.filterPositionInput == "") {
+        this.errOutline = true;
+      } else this.errOutline = false;
     },
     /**
      * Gọi Api để lọc theo select
+     * Createdby CMChau 24/4/2021
      */
     async onFilterDepartment(selectDepartmentId) {
       this.employees = await this.$axios.$get(
@@ -432,6 +472,7 @@ export default {
     },
     /**
      * Gọi Api để lọc theo select position
+     * Createdby CMChau 24/4/2021
      */
     async onFilterPosition(selectPositionId) {
       this.employees = await this.$axios.$get(
@@ -439,9 +480,11 @@ export default {
       );
     },
     /**
-    Binding tên phòng ban vào form lọc
-    Created by CMChau (14/4/2021)
-     */
+     * Binding tên phòng ban vào form lọc
+     * Created by CMChau (14/4/2021)
+     * Updated by CMChau(27/4/2021)
+     * Thêm ẩn viền, thông báo lỗi
+    */
     selectNameDepartment(nameDepartment) {
       // Gán tên phòng ban
       this.selectedDepartmentname = nameDepartment;
@@ -449,12 +492,18 @@ export default {
       this.showCbbList = false;
       // Hiển thị dòng "Tất cả vị trí"
       this.isHideDepartment = false;
-
+      //Border xổ xuống
       this.outLineDepartment = false;
+      //Ẩn border lỗi
+      this.errOutlineDepartment = false;
 
-      this.filterPositionInput=this.positions;
     },
-    // Binding tên vị trí
+    /**
+     * Binding tên vị trí
+     * Createdby CMChau 14/4/2021
+     * Updated by CMChau(26/4/2021)
+     * Thêm dấu tích, thông báo lỗi, border
+     */
     selectNamePosition(name) {
       // Gán tên vị trí
       this.selectedPositionName = name;
@@ -464,11 +513,16 @@ export default {
       this.isHidePosition = false;
       // Thêm dấu tick
       this.hideCheckIcon = false;
+      //Border icon xổ xuống
+      this.outLinePosition = false;
+      //Ẩn thông báo lỗi
+      this.tooltipPosition=true;
     },
     /**
      *Chọn tất cả phòng ban
      *Created by CMChau(15/4/2021)
-     *
+     *Updated by CMChau(27/4/2021)
+     * Thêm ẩn viền, thông báo lỗi, ẩn dòng "Tất cả vị trí"
      */
     loadDataDepartment() {
       // Gán tên phòng ban
@@ -479,10 +533,18 @@ export default {
       this.outLineDepartment = false;
       // Ẩn dòng "Tất cả phòng ban"
       this.isHideDepartment = true;
+      //Ẩn thông báo lỗi 
+      this.tooltipDepartment=true;
+      //Ẩn viền lỗi
+      this.errOutlineDepartment=false
+      //Ẩn thống báo lỗi
+      this.tooltipDepartment=true
     },
     /***
      * Chọn tất cả vị trí
      * Created by CMChau(15/4/2021)
+     * Updated by CMChau(27/4/2021)
+     * Thêm ẩn viền, thông báo lỗi, ẩn dòng "Tất cả vị trí"
      */
     loadDataPosition() {
       // Gán tên vị trí
@@ -493,6 +555,11 @@ export default {
       this.outLinePosition = false;
       // Ẩn dòng "Tất cả vị trí"
       this.isHidePosition = true;
+      //Ẩn viền lỗi
+      this.errOutline=false
+      //Ẩn thông báo lỗi
+      this.tooltipPosition=true
+
     },
     // hideRowCombobox(){
     //   this.isHidePosition=true
@@ -575,5 +642,31 @@ export default {
 }
 .error-outline-department {
   border-color: red;
+}
+
+.tooltip-text {
+  font-size: 10px;
+  width: 180px;
+  position: absolute;
+  left: 50px;
+  top: 20px;
+  border: 0.5px solid #bbbbbb;
+  background-color: #ffffff;
+  padding: 4px;
+  visibility: hidden;
+  z-index: 1;
+}
+
+#combobox-position:hover .tooltip-text {
+  visibility: visible;
+}
+#combobox-department:hover .tooltip-text {
+  visibility: visible;
+}
+.tooltip-text-position {
+  display: none;
+}
+.tooltip-text-department {
+  display: none;
 }
 </style>
