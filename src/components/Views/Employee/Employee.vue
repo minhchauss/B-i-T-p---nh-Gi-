@@ -12,10 +12,11 @@
     </div>
     <div class="toolbar">
       <div class="toolbarSelect">
-        <Combobox 
+        <Combobox
           :departments="departments"
           :positions="positions"
-          />
+          :key="comboboxKey"
+        />
       </div>
 
       <div class="toolbarButton">
@@ -70,9 +71,7 @@
         </tbody>
       </table>
     </div>
-    <Pagination 
-    
-    />
+    <Pagination />
     <EmployeeDetail
       ref="dialogEmployee"
       :isHide="isHide"
@@ -99,9 +98,9 @@
       :messageNotification="messageNotification"
       :showNotic="showNotic"
     />
-     <Noticfication
-     :messageNotification="messageNotification"
-     :showNotic="showNotic"
+    <Noticfication
+      :messageNotification="messageNotification"
+      :showNotic="showNotic"
     />
     <div class="loading" :class="{ displayNone: isDone }">
       <div class="modal"></div>
@@ -116,9 +115,9 @@ import DialogConfirm from "../../Commons/DialogConfirm.vue";
 import Pagination from "../../Commons/Pagination.vue";
 import moment from "moment";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
-import Noticfication from '../../Commons/Noticfication.vue';
-import Combobox from './Combobox.vue'
-const baseURL="http://api.manhnv.net/v1";
+import Noticfication from "../../Commons/Noticfication.vue";
+import Combobox from "./Combobox.vue";
+const baseURL = "http://api.manhnv.net/v1";
 export default {
   components: {
     EmployeeDetail,
@@ -127,14 +126,13 @@ export default {
     Noticfication,
     Combobox,
   },
-  props: {
-    
-  },
+  props: {},
   //
   created() {
     this.getDepartmentData();
     this.getPositionData();
     this.getEmployeesData();
+    this.forcedRender();
   },
   mounted() {},
   methods: {
@@ -218,8 +216,8 @@ export default {
       axios.get(`${baseURL}/Employees`).then((res) => {
         this.employees = res.data;
         //Ẩn modal đang lấy dữ liệu
-        this.isDone=true;
-        this.showNotic=false;
+        this.isDone = true;
+        this.showNotic = false;
         this.hideNoticfication();
         return true;
         // this.employee.DateOfbirth = this.formatFormDate(
@@ -267,16 +265,13 @@ export default {
      * Created by CMChau(5/4/2021)
      */
     deleteDataOnRow(selectedId) {
-      this.isDone=false;
-      axios
-        .delete(`${baseURL}/Employees/` + selectedId)
-        .then((res) => {
-          console.log(res.status);
-          this.getEmployeesData();
-          this.hideBtnDelete = true;
-          this.messageNotification="Xóa thành công";
-          
-        });
+      this.isDone = false;
+      axios.delete(`${baseURL}/Employees/` + selectedId).then((res) => {
+        console.log(res.status);
+        this.getEmployeesData();
+        this.hideBtnDelete = true;
+        this.messageNotification = "Xóa thành công";
+      });
     },
     /***
      * Định dạng ngày sinh trong bảng
@@ -296,7 +291,7 @@ export default {
     formatFormDate(date) {
       if (!date) return "";
       else {
-        return moment(date,"YYYY-MM-DD hh:mm").format("YYYY-MM-DD");
+        return moment(date, "YYYY-MM-DD hh:mm").format("YYYY-MM-DD");
       }
     },
     /**
@@ -304,12 +299,10 @@ export default {
      * Created by CMChau(6/4/2021)
      */
     getAutoEmployeeCode() {
-      axios
-        .get(`${baseURL}/Employees/NewEmployeeCode`)
-        .then((res) => {
-          this.newEmployeeCode = res.data;
-          // console.log(this.newEmployeeCode);
-        });
+      axios.get(`${baseURL}/Employees/NewEmployeeCode`).then((res) => {
+        this.newEmployeeCode = res.data;
+        // console.log(this.newEmployeeCode);
+      });
     },
     /**
      * Lấy danh sách phòng ban qua API
@@ -318,6 +311,7 @@ export default {
     getDepartmentData() {
       axios.get(`http://api.manhnv.net/api/Department`).then((res) => {
         this.departments = res.data;
+        this.forcedRender();
       });
     },
     /**
@@ -327,7 +321,7 @@ export default {
     getPositionData() {
       axios.get(`${baseURL}/Positions`).then((res) => {
         this.positions = res.data;
-        this.positionName=this.positions.PositionName
+        this.forcedRender();
       });
     },
     /**
@@ -356,46 +350,48 @@ export default {
      */
     selectNameDepartment(name) {
       this.selectedDepartmentname = name;
-      this.changeBackground=true;
+      this.changeBackground = true;
     },
     //Binding tên vị trí
     selectNamePosition(name) {
       this.selectedPositionName = name;
     },
     /**
-    *Chọn tất cả phòng ban
-    *Created by CMChau(15/4/2021)
-    *
+     *Chọn tất cả phòng ban
+     *Created by CMChau(15/4/2021)
+     *
      */
-     loadDataDepartment(){
-       this.selectedDepartmentname="Tất cả phòng ban"
-     },
-     /***
-      * Chọn tất cả vị trí
-      * Created by CMChau(15/4/2021)
-      */
-     loadDataPosition(){
-       this.selectedPositionName="Tất cả vị trí"
-     },
-      /**
-       * Hiển thị thông báo thao tác thành công
-       * Created by CMChau(18/4/2021)
-       */
-     hideNoticfication(){
-       setTimeout(()=>this.showNotic=true,3000)
-     },
-     noticficationData(message){
-       this.showNotic=false;
-       this.messageNotification=message;
-       this.hideNoticfication();
-     }
-     
-
+    loadDataDepartment() {
+      this.selectedDepartmentname = "Tất cả phòng ban";
+    },
+    /***
+     * Chọn tất cả vị trí
+     * Created by CMChau(15/4/2021)
+     */
+    loadDataPosition() {
+      this.selectedPositionName = "Tất cả vị trí";
+    },
+    /**
+     * Hiển thị thông báo thao tác thành công
+     * Created by CMChau(18/4/2021)
+     */
+    hideNoticfication() {
+      setTimeout(() => (this.showNotic = true), 3000);
+    },
+    noticficationData(message) {
+      this.showNotic = false;
+      this.messageNotification = message;
+      this.hideNoticfication();
+    },
+    forcedRender() {
+      this.comboboxKey += 1;
+    },
   },
   computed: {},
   data() {
     return {
-      isDone : false,
+      comboboxKey: 0,
+      isDone: false,
       isHide: true,
       employees: [],
       employee: {},
@@ -429,26 +425,26 @@ export default {
       // dataFieldsDepartment: { value: "DepartmentId", text: "DepartmentName" },
       selectedDepartmentname: "Tất cả phòng ban",
       selectedPositionName: "Tất cả vị trí",
-      changeBackground:false,
+      changeBackground: false,
 
-
-      currentPage:1,
-      bootstrapPagination:{// http://getbootstrap.com/docs/4.1/components/pagination/
-      ul:'pagination',
-      li: 'page-item',
-      liActive:'active',
-      liDisable:'disable',
-      button:'page-link'
+      currentPage: 1,
+      bootstrapPagination: {
+        // http://getbootstrap.com/docs/4.1/components/pagination/
+        ul: "pagination",
+        li: "page-item",
+        liActive: "active",
+        liDisable: "disable",
+        button: "page-link",
       },
-      customLabels:{
-        first:'First',
-        prev:'Previous',
-        next:'Next',
-        last:'Last'
+      customLabels: {
+        first: "First",
+        prev: "Previous",
+        next: "Next",
+        last: "Last",
       },
-      messageNotification:"",
-      showNotic:true,
-      positionName:[],
+      messageNotification: "",
+      showNotic: true,
+      positionName: [],
     };
   },
 };
@@ -456,7 +452,7 @@ export default {
 
 <style scoped >
 @import url(../../../assets/css/EmployeeCss/employee.css);
-.change-hightlight::after{
+.change-hightlight::after {
   background-color: #019160;
 }
 .combobox-position {

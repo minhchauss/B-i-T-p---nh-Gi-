@@ -16,6 +16,7 @@
             tabindex="-1"
             v-bind:class="{
               'out-line-input-department': outLineDepartment,
+              'error-outline-department': errOutlineDepartment,
             }"
             v-model="selectedDepartmentname"
             @input="filterDepartmentName()"
@@ -26,6 +27,7 @@
             @click="focusIconDown()"
             v-bind:class="{
               'out-line-input-department': outLineDepartment,
+              'error-outline-department': errOutlineDepartment,
             }"
           >
             <font-awesome-icon :icon="['fas', 'angle-down']" />
@@ -118,7 +120,7 @@
               tabindex="-1"
               @click.enter="loadDataPosition()"
             >
-              <div class="text-position">Tất cả vị trí</div>
+              <div class="text-position">{{ defaultPositionName }}</div>
             </div>
             <!-------------------Binding tên vị trí----------------------------->
             <div v-if="filterPositionInput">
@@ -173,6 +175,8 @@
 export default {
   mounted() {
     // document.addEventListener("keyup", this.nextItem);
+    this.filterPositionInput = this.positions;
+    this.filterDepartmentInput=this.departments;
   },
   created() {
     this.setValueInput();
@@ -216,6 +220,7 @@ export default {
       outLineDepartment: false,
       outLinePosition: false,
       errOutline: false,
+      errOutlineDepartment:false,
       showCbbList: false,
       nameDepartment: "",
       namePosition: "",
@@ -229,11 +234,11 @@ export default {
       states: ["alabama", "texsas", "alaska", "Frorida"],
       filteredStates: [],
       selectedPositionName: "",
-      dataPo: this.positions,
       filterPositionInput: [],
       filterDepartmentInput: [],
       value: 1,
-      dataDe: this.departments,
+      defaultPositionName:"Tất cả vị trí",
+        
     };
   },
   methods: {
@@ -254,12 +259,10 @@ export default {
     setValueInput() {
       this.selectedDepartmentname = "Tất cả phòng ban";
       this.selectedPositionName = "Tất cả vị trí";
-      this.dataPo = this.positions;
       this.filterPositionName();
       this.showCbbListPosition = false;
       this.filterDepartmentName();
       this.showCbbList=false;
-      this.dataDe=this.departments;
     },
     /**
      * Autocomplete vị trí
@@ -268,8 +271,8 @@ export default {
     filterPositionName() {
       this.isHidePosition = false;
       this.showCbbListPosition = true;
-      this.dataPo = this.positions;
-      this.filterPositionInput = this.dataPo.filter((item) => {
+      // this.dataPo = this.positions;
+      this.filterPositionInput = this.positions.filter((item) => {
         return item.PositionName.toLowerCase().includes(
           this.selectedPositionName.toLowerCase()
         );
@@ -284,9 +287,9 @@ export default {
       this.isHideDepartment = false;
       this.showCbbList = true;
       //gán data department
-      this.dataDe = this.departments;
+      // this.dataDe = this.departments;
       //thực hiện filter
-      this.filterDepartmentInput = this.dataDe.filter((item) => {
+      this.filterDepartmentInput = this.departments.filter((item) => {
         return item.DepartmentName.toLowerCase().includes(
           this.selectedDepartmentname.toLowerCase()
         );
@@ -308,6 +311,7 @@ export default {
       this.outLineDepartment = !this.outLineDepartment;
       // Hiện list phòng ban
       this.showCbbList = !this.showCbbList;
+
     },
     /**
      * Click vào icon down vị trí
@@ -317,6 +321,7 @@ export default {
       this.outLinePosition = !this.outLinePosition;
       // Toggle list vị trí
       this.showCbbListPosition = !this.showCbbListPosition;
+
     },
     /**
      * Sau khi bấm ra ngoài combobox phòng ban
@@ -483,6 +488,9 @@ export default {
 }
 
 .error-outline-position {
+  border-color: red;
+}
+.error-outline-department {
   border-color: red;
 }
 </style>
