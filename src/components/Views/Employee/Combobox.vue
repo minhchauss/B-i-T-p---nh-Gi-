@@ -100,6 +100,7 @@
             @input="filterPositionName()"
             @focus="clearDataPositionInput()"
             @focusout="focusOutInputPosition()"
+            @keydown="test"
           />
 
           <!----------------Icon xổ ra list---------- ------------>
@@ -497,6 +498,7 @@ export default {
       //Ẩn border lỗi
       this.errOutlineDepartment = false;
 
+      this.tooltipDepartment=true;
     },
     /**
      * Binding tên vị trí
