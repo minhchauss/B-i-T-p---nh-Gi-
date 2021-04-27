@@ -11,6 +11,7 @@
       </div>
       <div class="combobox">
         <div class="combobox-selected-item">
+          <!----------------------input nhập department---------------------------------->
           <input
             type="text"
             tabindex="-1"
@@ -20,7 +21,9 @@
             }"
             v-model="selectedDepartmentname"
             @input="filterDepartmentName()"
+            @focus="clearDataDepartmentInput"
           />
+          <!------------------------icon xổ ra list-------------------------------->
           <div
             class="icon-down"
             tabindex="-1"
@@ -33,6 +36,7 @@
             <font-awesome-icon :icon="['fas', 'angle-down']" />
           </div>
         </div>
+        <!------------------------Nội dung list-------------------------------->
         <div
           class="combobox-content"
           tabindex="-1"
@@ -40,6 +44,7 @@
           @focusout="unFocusList()"
         >
           <div class="combobox-list" tabindex="-1">
+            <!----------------------item tất cả phòng ban---------------------------------->
             <div
               class="combobox-item"
               tabindex="-1"
@@ -48,8 +53,10 @@
             >
               <div class="text-position">Tất cả phòng ban</div>
             </div>
+            <!----------------------item list phòng ban---------------------------------->
             <div v-if="filterDepartmentInput">
               <div
+              ref="test"
                 v-for="item in filterDepartmentInput"
                 :key="item.DepartmentId"
                 class="combobox-item"
@@ -59,6 +66,7 @@
                   highlight: item.DepartmentName == selectedDepartmentname,
                 }"
               >
+              <!--------------------------icon tick------------------------------>
                 <font-awesome-icon
                   class="icon-down-list"
                   :icon="['fas', 'check']"
@@ -76,13 +84,15 @@
           <!------------------Input nhập --------------------->
           <input
             type="text"
-            tabindex="-1"
+            tabindex="0"
             v-bind:class="{
               'out-line-input-position': outLinePosition,
               'error-outline-position': errOutline,
             }"
             v-model="selectedPositionName"
             @input="filterPositionName()"
+            @focus="clearDataPositionInput()"
+            @focusout="focusOutInputPosition()"
           />
           <!----------------Icon xổ ra list---------- ------------>
           <div
@@ -93,6 +103,7 @@
               'out-line-input-position': outLinePosition,
               'error-outline-position': errOutline,
             }"
+             
           >
             <!------------ ------------>
             <font-awesome-icon :icon="['fas', 'angle-down']" />
@@ -243,15 +254,75 @@ export default {
   },
   methods: {
     /**
-     * Điều hướng bằng mũi tên
+     * Test điều hướng mũi tên
      */
-    // nextItem(e) {
-    //   if (e.keyCode == 38 && this.value > 1) {
-    //     this.value--;
-    //   } else if (e.keyCode == 40 && this.value < 3) {
-    //     this.value++;
+    //   setResult(text) {
+    //   this.search = text
+    // },
+
+    // onArrow(event) {
+    //   if (this.filteredUsers.length > 0) {
+    //     this.arrowCounter = event.code == "ArrowDown" ? ++this.arrowCounter : --this.arrowCounter;
+    //     if (this.arrowCounter >= this.filteredUsers.length)
+    //       this.arrowCounter = (this.arrowCounter) % this.filteredUsers.length;
+    //     else if (this.arrowCounter < 0)
+    //       this.arrowCounter = this.filteredUsers.length + this.arrowCounter;
+    //     this.setResult(this.filteredUsers[this.arrowCounter].text);
     //   }
     // },
+    // inputChanged(event) {
+    //   if (event.code == "ArrowUp" || event.code == "ArrowDown")
+    //     return;
+
+    //   this.filteredUsers = [];
+
+    //   if (event.code == "Enter")
+    //     return;
+
+    //   var filtered = this.users.filter((user) => {
+    //     return user.text.match(this.search)
+    //   });
+
+    //   this.isOpen = true
+    //   this.filteredUsers.push(...filtered)
+
+
+    //   console.log(this.filteredUsers)
+    // },
+    /**
+     * Clear data khi focus vào input posiiton
+     */
+    clearDataPositionInput(){
+      this.selectedPositionName="";
+    },
+    /**
+     * Clear data khi focus vào input department
+     */
+    clearDataDepartmentInput(){
+      this.selectedDepartmentname="";
+    },
+    /**
+     * Điều hướng bằng mũi tên
+     */
+    test(event){
+      switch (event.keyCode){
+        case 38:
+          if(this.filterPositionInput ===null){
+            this.filterPositionInput=0;
+          }else if(this.filterPositionInput>0){
+            this.filterPositionInput--;
+          }
+          break;
+          case 40:{
+            if(this.filterPositionInput===null){
+              this.filterPositionInput=0;
+            }else if(this.filterPositionInput<this.item.length -1){
+              this.filterPositionInput++;
+            }
+            break;
+          }
+      }
+    },
     /**
      * Lấy danh sách tên vị trí
      * Created by CMChau 26/4/2021
@@ -277,6 +348,7 @@ export default {
           this.selectedPositionName.toLowerCase()
         );
       });
+      
     },
     /**
      * AutoComplete phòng ban
@@ -312,6 +384,8 @@ export default {
       // Hiện list phòng ban
       this.showCbbList = !this.showCbbList;
 
+      this.filterDepartmentInput=this.departments
+
     },
     /**
      * Click vào icon down vị trí
@@ -321,6 +395,8 @@ export default {
       this.outLinePosition = !this.outLinePosition;
       // Toggle list vị trí
       this.showCbbListPosition = !this.showCbbListPosition;
+
+      this.filterPositionInput=this.positions
 
     },
     /**
@@ -340,6 +416,11 @@ export default {
       this.showCbbListPosition = false;
       // Ẩn border input
       this.outLinePosition = false;
+      
+      if(this.filterPositionInput==null||this.filterPositionInput==""){
+        this.errOutline=true;
+      }
+      else this.errOutline=false;
     },
     /**
      * Gọi Api để lọc theo select
@@ -370,6 +451,8 @@ export default {
       this.isHideDepartment = false;
 
       this.outLineDepartment = false;
+
+      this.filterPositionInput=this.positions;
     },
     // Binding tên vị trí
     selectNamePosition(name) {
