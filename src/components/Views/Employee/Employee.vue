@@ -2,78 +2,128 @@
   <div>
     <!-- <div v-bind:key="componentKey"> -->
     <div class="page-title">
-      <div class="page-left">Danh sách nhân viên</div>
+      <div class="page-left">NHÂN VIÊN</div>
       <div class="page-right">
-        <button id="btnAdd" class="btn-default" v-on:click="btnAddOnClick()">
-          <div><img src="../../../assets/icon/add.png" /></div>
-          <div>Thêm nhân viên</div>
+        <button
+          id="btnAdd"
+          class="btn-default"
+          style="backgound-color: #019138"
+          v-on:click="btnAddOnClick()"
+        >
+          <div>Thêm mới nhân viên</div>
         </button>
       </div>
     </div>
     <div class="toolbar">
       <div class="toolbarSelect">
-        <Combobox
+        <!-- <Combobox
           :departments="departments"
           :positions="positions"
           :key="comboboxKey"
-        />
+          :employees="employees"
+        /> -->
+        <div>
+          <input
+            id="imput-search"
+            type="text"
+            class="input-search"
+            placeholder="Tìm kiếm theo mã, tên nhân viên"
+            v-model="searchNameCode"
+            @input="filterEmployee"
+          />
+        </div>
       </div>
 
       <div class="toolbarButton">
-        <button
-          :disabled="isDisable"
-          class="btn btn-delete"
-          :class="{ hideBtnDelete: hideBtnDelete }"
-          v-on:click="btnOnDelete()"
-        >
-          Xóa
-        </button>
         <button class="btn-refresh" v-on:click="btnRefresh()"></button>
       </div>
     </div>
     <div class="grid">
-      <table id="tblListCustomer" width="100%" border="0">
-        <thead>
-          <tr>
-            <th>Mã nhân viên</th>
-            <th>Họ và tên</th>
-            <th>Giới tính</th>
-            <th>Ngày sinh</th>
-            <th>Điện thoại</th>
-            <th>Email</th>
-            <th>Chức vụ</th>
-            <th>Phòng ban</th>
-            <th>Mức lương cơ bản</th>
-            <th>Tình trạng công việc</th>
+      <table id="tblListEmployee" border="0">
+        <thead style="border: none">
+          <tr style="border: none">
+            <th><input type="checkbox" style="height: 20px; width: 20px" /></th>
+            <th style="border-right: 1px solid #bbb">MÃ NHÂN VIÊN</th>
+            <th>TÊN NHÂN VIÊN</th>
+            <th>NGÀY SINH</th>
+            <th>SỐ CMND</th>
+            <th>CHỨC DANH</th>
+            <th>TÊN ĐƠN VỊ</th>
+            <th>SỐ TÀI KHOẢN</th>
+            <th>TÊN NGÂN HÀNG</th>
+            <th>CHI NHÁNH NGÂN HÀNG</th>
+            <th
+              style="
+                border-right: none;
+                position: sticky;
+                right: 0;
+                border-left: 1px solid #bbb;
+              "
+            >
+              CHỨC NĂNG
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="employee in employees"
-            :key="employee.EmployeeId"
-            @dblclick="dblRowOnClick(employee.EmployeeId)"
-            @click="selectedRowId(employee.EmployeeId, employee.EmployeeCode)"
-            :class="{ hightlight: employee.EmployeeId == selectedId }"
+            v-for="item in employees"
+            :key="item.employeeId"
+            @dblclick="dblRowOnClick(item.employeeId)"
+            @click="selectedRowId(item.employeeId, item.employeeCode)"
+            :class="{ hightlight: item.employeeId == selectedId }"
           >
-            <td>{{ employee.EmployeeCode }}</td>
-            <td>{{ employee.FullName }}</td>
-            <td>{{ employee.GenderName }}</td>
-            <td>{{ formatDate(employee.DateOfBirth) }}</td>
-            <td>{{ employee.PhoneNumber }}</td>
-            <td>{{ employee.Email }}</td>
-            <td>{{ employee.PositionName }}</td>
-            <td>{{ employee.DepartmentName }}</td>
-            <td style="text-align: right">
-              {{ formatPrice(employee.Salary) }}
+            <td><input type="checkbox" style="height: 20px; width: 20px" /></td>
+            <td>{{ item.employeeCode }}</td>
+            <td>{{ item.fullName }}</td>
+            <td>{{ formatDate(item.dateOfBirth) }}</td>
+            <td>{{ item.identityNumber }}</td>
+            <td>{{ item.positionName }}</td>
+            <td>{{ item.departmentName }}</td>
+            <td>{{ item.bankAccount }}</td>
+            <td>{{ item.bankName }}</td>
+            <td>{{ item.bankBranch }}</td>
+            <td class="activity-table">
+              <div class="group-btn-delete">
+                <div class="delete-row" style="color: blue; padding-right: 5px">
+                  <button
+                    class="btn-default btn-delete-row"
+                    @click="dblRowOnClick(item.employeeId)"
+                  >
+                    Sửa
+                  </button>
+                </div>
+                <button class="btn-delete-row list-select-down">
+                  <div
+                    class="arrow-down arrow-down-list-delete"
+                    style="z-index: 1"
+                  >
+                    <div class="list-arrow-delete">
+                      <div class="select-list-item">Nhân bản</div>
+                      <div
+                        class="select-list-item"
+                        @click="btnOnDelete(item.employeeId)"
+                      >
+                        Xóa
+                      </div>
+                      <div class="select-list-item">Sử dụng</div>
+                    </div>
+                  </div>
+                </button>
+              </div>
             </td>
-            <td style="text-align: right">{{ employee.WorkStatus }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <Pagination />
+    <Pagination
+      @getEmployeesData="getEmployeesData"
+      @checkFilter="checkFilter"
+      :searchNameCode="searchNameCode"
+      ref="paging"
+    />
     <EmployeeDetail
       ref="dialogEmployee"
+      :searchNameCode="searchNameCode"
       :isHide="isHide"
       @hideDialogDetail="hideDialogDetail"
       :employee="employee"
@@ -86,6 +136,7 @@
       :messageNotification="messageNotification"
       :showNotic="showNotic"
       @noticficationData="noticficationData"
+      @formatFormDate="formatDate"
     />
     <DialogConfirm
       :isHideDialogConfirm="isHideDialogConfirm"
@@ -103,8 +154,7 @@
       :showNotic="showNotic"
     />
     <div class="loading" :class="{ displayNone: isDone }">
-      <div class="modal"></div>
-      <div class="lds-dual-ring"></div>
+      <div class="sprite-loading"></div>
     </div>
   </div>
 </template>
@@ -112,33 +162,72 @@
 import axios from "axios";
 import EmployeeDetail from "./EmployeeDetail.vue";
 import DialogConfirm from "../../Commons/DialogConfirm.vue";
-import Pagination from "../../Commons/Pagination.vue";
 import moment from "moment";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import Noticfication from "../../Commons/Noticfication.vue";
-import Combobox from "./Combobox.vue";
-const baseURL = "http://api.manhnv.net/v1";
+// import Combobox from "./Combobox.vue";
+import Pagination from "../../Commons/Pagination.vue";
+import { baseURL } from "./../../../config/dev.env.js";
 export default {
   components: {
     EmployeeDetail,
     DialogConfirm,
-    Pagination,
     Noticfication,
-    Combobox,
+    // Combobox,
+    Pagination,
   },
   props: {},
   //
   created() {
+    // this.getAllEmployeesData();
     this.getDepartmentData();
-    this.getPositionData();
-    this.getEmployeesData();
-    this.forcedRender();
+    this.getEmployeesData(1, 10);
+    // // this.getPositionData();
+    // this.forcedRender();
   },
   mounted() {},
+  computed: {},
   methods: {
+    /**kiểm tra xem có lọc hay không
+     *
+     */
+    checkFilter(a, b) {
+      this.pageIndex = a;
+      this.pageSize = b;
+      var c = this.searchNameCode;
+      if (this.searchNameCode == null || this.searchNameCode == "") {
+        this.getEmployeesData(a, b);
+      } else {
+        this.filterEmployee(a, b, c);
+      }
+    },
+    /**
+     * Lọc phân trang
+     * Created by CMChau 13/5/2021
+     */
+    filterEmployee(index, size, text) {
+      index = this.pageIndex;
+      size = this.pageSize;
+      text = this.searchNameCode;
+      this.$refs.paging.getTotalEmployee();
+      if (text == null || text == "") {
+        this.getEmployeesData(index, size);
+      } else {
+        axios
+          .get(
+            `${baseURL}/Employees/Paging/Filter?pageIndex=${index}&pageSize=${size}&textFilter=${text}`
+          )
+          .then((res) => {
+            this.employees = res.data;
+            this.isDone = true;
+            this.showNotic = true;
+            this.hideNoticfication();
+          });
+      }
+    },
     /**
      * Focus vào input Mã nhân viên
-     * Created by CMChau (7/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     focusInput() {
       // alert(1);
@@ -148,7 +237,7 @@ export default {
     },
     /***
      * Hiển thị dialog thêm nhân viên khi bấm nút thêm
-     * Created by CMChau(4/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     btnAddOnClick() {
       this.isHide = false;
@@ -159,7 +248,7 @@ export default {
     },
     /**
      * Double click vào 1 hàng hiện form chi tiết
-     * Created by CMChau(4/42021)
+     * Created by CMChau(9/5/2021)
      */
     dblRowOnClick(selectedId) {
       this.isHide = false;
@@ -170,7 +259,7 @@ export default {
     },
     /**
      * Bấm nút xóa hiện dialog xác nhận xóa
-     * Created by CMChau (5/4/2021)
+     * Created by CMChau (9/5/2021)
      * Nếu không chọn dòng nào thì không hoạt động
      */
     btnOnDelete() {
@@ -179,9 +268,9 @@ export default {
         this.isHideDialogConfirm = false;
         console.log(this.selectedId);
         this.messageDelete =
-          "Bạn có chắc chắn muốn xóa nhân viên [" +
+          "Bạn có chắc chắn muốn xóa nhân viên có mã<" +
           this.employeeCode +
-          "] không?";
+          "> không?";
       }
     },
     //truyền tham số vào component con để ẩn dialog khi bấm nút X hoặc hủy
@@ -191,9 +280,8 @@ export default {
     },
     /**
      * Lấy id của 1 nhân viên khi focus vào 1 hàng
-     * Created by CMChau(5/4/2021)
      * Lấy mã nhân viên
-     * Created by CMChau (6/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     selectedRowId(employeeId, employeeCode) {
       this.selectedId = employeeId;
@@ -203,41 +291,58 @@ export default {
     },
     /**
      * Bấm nút refresh sẽ tải lại dữ liệu của trang
-     * Created by CMChau (5/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     btnRefresh() {
-      this.getEmployeesData();
+      var Index = this.pageIndex;
+      var Size = this.pageSize;
+      this.getEmployeesData(Index, Size);
+    },
+    /**
+     * gọi API để lấy danh sách nhân viên theo phân trang
+     * Create by CMChau(8/5/2021)
+     */
+    getEmployeesData(index, size) {
+      axios
+        .get(`${baseURL}/Employees/Paging?pageIndex=${index}&pageSize=${size}`)
+        .then((res) => {
+          this.employees = res.data;
+          this.pageIndex = index;
+          this.pageSize = size;
+          //Ẩn modal đang lấy dữ liệu
+          this.isDone = true;
+          this.showNotic = true;
+          this.hideNoticfication();
+          // return true;
+          // this.employee.dateOfbirth = this.formatFormDate(
+          //   this.employee.dateOfbirth
+          // );
+          console.log(res.data);
+        });
     },
     /**
      * gọi API để lấy danh sách nhân viên
-     * Create by CMChau(4/4/2021)
+     * Create by CMChau(8/5/2021)
      */
-    getEmployeesData() {
-      axios.get(`${baseURL}/Employees`).then((res) => {
-        this.employees = res.data;
-        //Ẩn modal đang lấy dữ liệu
-        this.isDone = true;
-        this.showNotic = false;
-        this.hideNoticfication();
-        return true;
-        // this.employee.DateOfbirth = this.formatFormDate(
-        //   this.employee.DateOfbirth
-        // );
-        // console.log(res.data);
-      });
-    },
-    /**
-     * Định dạng lương cơ bản
-     * Created by CMChau(4/4/2021)
-     * Ví dụ: 2000000 -> 2.000.000 VND
-     */
-    formatPrice(value) {
-      let val = value / 1;
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    },
+    // getAllEmployeesData() {
+    //   axios.get(`${baseURL}/Employees`).then((res) => {
+    //     this.allEmployees = res.data;
+    //     console.log(res.data);
+    //     console.log(this.allEmployees);
+    //   });
+    // },
+    // /**
+    //  * Định dạng lương cơ bản
+    //  * Created by CMChau(4/4/2021)
+    //  * Ví dụ: 2000000 -> 2.000.000 VND
+    //  */
+    // formatPrice(value) {
+    //   let val = value / 1;
+    //   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    // },
     /**
      * Lấy thông tin chi tiết của 1 nhân viên qua API
-     * Created by CMChau(5/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     getInforEmployee(selectedId) {
       axios
@@ -245,16 +350,16 @@ export default {
         .then((res) => {
           this.employee = res.data;
           this.newEmployeeCode = this.employeeCode;
-          this.employee.DateOfBirth = this.formatFormDate(
-            this.employee.DateOfBirth
+          this.employee.dateOfBirth = this.formatFormDate(
+            this.employee.dateOfBirth
           );
-          this.employee.IdentityDate = this.formatFormDate(
-            this.employee.IdentityDate
+          this.employee.identityDate = this.formatFormDate(
+            this.employee.identityDate
           );
-          this.employee.JoinDate = this.formatFormDate(this.employee.JoinDate);
+          // this.employee.JoinDate = this.formatFormDate(this.employee.JoinDate);
           // this.employee.Salary =
           //   this.formatPrice(this.employee.Salary) + " (VNĐ)";
-          console.log(this.employee.DateOfBirth);
+          console.log(this.employee.dateOfBirth);
         })
         .catch((res) => {
           console.log(res.status);
@@ -262,20 +367,20 @@ export default {
     },
     /**
      * Xóa 1 bản ghi tại dòng được chọn
-     * Created by CMChau(5/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     deleteDataOnRow(selectedId) {
       this.isDone = false;
       axios.delete(`${baseURL}/Employees/` + selectedId).then((res) => {
         console.log(res.status);
-        this.getEmployeesData();
+        this.getEmployeesData(1, 10);
         this.hideBtnDelete = true;
         this.messageNotification = "Xóa thành công";
       });
     },
     /***
      * Định dạng ngày sinh trong bảng
-     * Created by CMChau(4/42021)
+     * Created by CMChau (9/5/2021)
      * Hiển thị thành DD-MM-YYYY
      */
     formatDate(date) {
@@ -286,7 +391,7 @@ export default {
     },
     /**
      * Format lại ngày tháng trong form
-     * Created by CMChau(6/4/2021)
+     * Created by CMChau(9/5/2021)
      */
     formatFormDate(date) {
       if (!date) return "";
@@ -296,7 +401,7 @@ export default {
     },
     /**
      * Lấy mã nhân viên tự động tăng
-     * Created by CMChau(6/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     getAutoEmployeeCode() {
       axios.get(`${baseURL}/Employees/NewEmployeeCode`).then((res) => {
@@ -306,71 +411,71 @@ export default {
     },
     /**
      * Lấy danh sách phòng ban qua API
-     * Created by CMChau(7/4/2021)
+     * Created by CMChau (9/5/2021)
      */
     getDepartmentData() {
-      axios.get(`http://api.manhnv.net/api/Department`).then((res) => {
+      axios.get(`${baseURL}/Departments`).then((res) => {
         this.departments = res.data;
         this.forcedRender();
       });
     },
-    /**
-     * Lấy danh sách vị trí công việc
-     * Created by CMChau(7/4/2021)
-     */
-    getPositionData() {
-      axios.get(`${baseURL}/Positions`).then((res) => {
-        this.positions = res.data;
-        this.forcedRender();
-      });
-    },
+    // /**
+    //  * Lấy danh sách vị trí công việc
+    //  * Created by CMChau (9/5/2021)
+    //  */
+    // getPositionData() {
+    //   axios.get(`${baseURL}/Positions`).then((res) => {
+    //     this.positions = res.data;
+    //     this.forcedRender();
+    //   });
+    // },
     /**
      * Gọi Api để lọc theo select
      */
-    onFilterDepartment(selectDepartmentId) {
-      axios
-        .get(`${baseURL}/Department/Filter/` + selectDepartmentId)
-        .then((res) => {
-          this.employees = res.data;
-        });
-    },
-    /**
-     * Gọi Api để lọc theo select position
-     */
-    onFilterPosition(selectPositionId) {
-      axios
-        .get(`${baseURL}/Positions/Filter/` + selectPositionId)
-        .then((res) => {
-          this.employees = res.data;
-        });
-    },
-    /**
-    Binding tên phòng ban vào form lọc
-    Created by CMChau (14/4/2021)
-     */
-    selectNameDepartment(name) {
-      this.selectedDepartmentname = name;
-      this.changeBackground = true;
-    },
-    //Binding tên vị trí
-    selectNamePosition(name) {
-      this.selectedPositionName = name;
-    },
-    /**
-     *Chọn tất cả phòng ban
-     *Created by CMChau(15/4/2021)
-     *
-     */
-    loadDataDepartment() {
-      this.selectedDepartmentname = "Tất cả phòng ban";
-    },
-    /***
-     * Chọn tất cả vị trí
-     * Created by CMChau(15/4/2021)
-     */
-    loadDataPosition() {
-      this.selectedPositionName = "Tất cả vị trí";
-    },
+    // onFilterDepartment(selectDepartmentId) {
+    //   axios
+    //     .get(`${baseURL}/Department/Filter/` + selectDepartmentId)
+    //     .then((res) => {
+    //       this.employees = res.data;
+    //     });
+    // },
+    // /**
+    //  * Gọi Api để lọc theo select position
+    //  */
+    // onFilterPosition(selectPositionId) {
+    //   axios
+    //     .get(`${baseURL}/Positions/Filter/` + selectPositionId)
+    //     .then((res) => {
+    //       this.employees = res.data;
+    //     });
+    // },
+    // /**
+    // Binding tên phòng ban vào form lọc
+    // Created by CMChau (14/4/2021)
+    //  */
+    // selectNameDepartment(name) {
+    //   this.selectedDepartmentname = name;
+    //   this.changeBackground = true;
+    // },
+    // //Binding tên vị trí
+    // selectNamePosition(name) {
+    //   this.selectedPositionName = name;
+    // },
+    // /**
+    //  *Chọn tất cả phòng ban
+    //  *Created by CMChau(15/4/2021)
+    //  *
+    //  */
+    // loadDataDepartment() {
+    //   this.selectedDepartmentname = "Tất cả phòng ban";
+    // },
+    // /***
+    //  * Chọn tất cả vị trí
+    //  * Created by CMChau(15/4/2021)
+    //  */
+    // loadDataPosition() {
+    //   this.selectedPositionName = "Tất cả vị trí";
+    // },
     /**
      * Hiển thị thông báo thao tác thành công
      * Created by CMChau(18/4/2021)
@@ -384,15 +489,19 @@ export default {
       this.hideNoticfication();
     },
     forcedRender() {
-      this.comboboxKey += 1;
+      // this.comboboxKey += 1;
     },
   },
-  computed: {},
+
   data() {
     return {
+      searchNameCode: "",
+      pageIndex: 1,
+      pageSize: 10,
       comboboxKey: 0,
-      isDone: false,
+      isDone: true,
       isHide: true,
+      allEmployees: [],
       employees: [],
       employee: {},
       gender: null,
@@ -412,7 +521,7 @@ export default {
       messageDepartment: "",
       messagePosition: "",
       dataPosition: new DataManager({
-        url: "http://api.manhnv.net/v1/Positions",
+        url: "",
         adaptor: new WebApiAdaptor(),
         crossDomain: false,
       }),
@@ -452,6 +561,7 @@ export default {
 
 <style scoped >
 @import url(../../../assets/css/EmployeeCss/employee.css);
+
 .change-hightlight::after {
   background-color: #019160;
 }
@@ -473,9 +583,9 @@ export default {
   border: none;
 }
 .hightlight {
-  background: #019160;
+  background: #e5e5e5;
   outline: none;
-  color: #ffffff;
+  color: #000000;
 }
 #dropDown {
   width: 180px;
@@ -541,5 +651,18 @@ export default {
   justify-content: center;
   text-align: center;
   display: flex;
+}
+.activity-table {
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  display: flex;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: none;
+  position: sticky;
+  right: 0;
+  background-color: #fff;
+  /* border-left: 1px dotted #bbb; */
 }
 </style>

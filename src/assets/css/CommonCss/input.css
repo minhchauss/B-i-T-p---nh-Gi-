@@ -11,22 +11,35 @@ input[type=email] {
     font: 13pt;
     padding-top: 0;
     line-height: 50px;
+    font-weight: 500;
+    font-family: notosans-regular;
 }
 
 input[type=text]:focus,
 input[type=date]:focus,
 input[type=email] :focus,
 input:focus {
-    border-color: #019160;
+    border-color: #08aa0a;
+}
+
+input[type=radio] {
+    width: 20px;
+    height: 20px;
+    outline: none;
+    box-shadow: none;
+}
+
+input[type='radio']:checked:before {
+    background: #019160 !important;
+    content: "";
 }
 
 input[type=text].input-search {
     background-image: url('../../icon/search.png');
     background-repeat: no-repeat;
     background-position-y: center;
-    background-position-x: 16px;
+    background-position-x: 225px;
     background-size: 20px;
-    padding-left: 40px;
 }
 
 select:focus {

@@ -1,26 +1,29 @@
 #content {
     position: absolute;
-    top: 60px;
+    top: 48px;
     left: 200px;
     right: 0px;
     bottom: 0px;
-    /* background-color: yellow; */
-    /* padding-left:  24px; */
-    padding: 24px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 #content .paging-bar {
-    height: 56px;
-    background-color: #fff;
-}
-
-.paging-bar {
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+    background-color: #ffffff;
     border-top: 1px solid #bbbbbb;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 0 16px;
-    z-index: 1 !important;
+    width: calc(100% - 32px);
+    left: 0;
+}
+
+#content .paging-bar select {
+    border-radius: 0px;
 }
 
 .btn-pagenumber.btn-pagenumber-selected,
@@ -49,13 +52,18 @@
 }
 
 .paging-bar .paging-record-info {
-    position: absolute;
     left: 16px;
 }
 
 .paging-bar .paging-record-option {
     position: absolute;
     right: 16px;
+}
+
+#select-paging {
+    height: 36px;
+    width: 200px;
+    border-radius: none !important;
 }
 
 .paging-option {
@@ -65,7 +73,7 @@
 }
 
 .btn-select-page {
-    width: 40px;
+    width: 60px;
     height: 40px;
     right: 24px;
     cursor: pointer;
@@ -73,6 +81,20 @@
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    border-radius: 4px;
+}
+
+.number-page {
+    height: 30px;
+    width: 30px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
     cursor: pointer;
 }
 

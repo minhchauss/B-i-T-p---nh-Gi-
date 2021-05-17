@@ -2,84 +2,58 @@
   <div>
     <div class="header">
       <div class="enterprise-name">
-        <div class="enterprise-drop">Nhà hàng Biển Đông</div>
-        <img src="../../assets/icon/btn-next-page.svg" />
+        <div class="icon-header icon-svg icon-nbar-group"></div>
+        <div class="enterprise-drop">
+          CÔNG TY TNHH SẢN XUẤT - THƯƠNG MẠI - DỊCH VỤ QUÍ PHÚC
+        </div>
+        <!-- <img src="../../assets/icon/btn-next-page.svg" /> -->
       </div>
       <div class="user-name">
-        <div class="user-img">
-          <img src="../../assets/icon/avatar-default.png" />
-        </div>
+        <div class="icon-svg bell-img"></div>
+        <div class="icon-svg user-img"></div>
         <span>Chu Minh Châu</span>
-        <img src="../../assets/icon/option.png" />
+        <div class="dropdown-user"></div>
       </div>
     </div>
-    
   </div>
 </template>
 <script>
 export default {
-  component:{
-  },
-}
+  component: {},
+};
 </script>
 
 <style scoped>
-.header {
-  width: calc(100% - 226px);
-  left: 226px;
-  top: 0;
-  background-color: #ffffff;
-  position: absolute;
-  height: 47px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #afa7a7;
-  overflow: hidden;
-  font-size: 20px;
-  font-weight: bold;
+.icon-nbar-group {
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
+  background-position: -847px -35px;
 }
-.enterprise-name {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/*Ảnh đại diện*/
-.enterprise-name img {
-  transform: rotate(90deg);
+.icon-header {
+  height: 30px;
+  width: 30px;
   margin-left: 10px;
-  width: 10%;
-  cursor: pointer;
+  margin-top: 15px;
 }
-
-.enterprise-drop {
-  margin-left: 16px;
-  font-size: 15px;
+.bell-img {
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -257px -32px;
+  height: 30px;
+  width: 30px;
+  margin-right: 0;
+  margin-top: 5px;
 }
-
-.user-name {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 16px;
-}
-
 .user-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 16px;
-  cursor: pointer;
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -352px -894px;
+  height: 30px;
+  width: 30px;
+  margin-right: 0;
+  border-radius: 50%;
+  padding-left: 2px;
+  margin-left: 5px;
 }
-
-.user-img img {
-  width: 25px;
-  height: auto;
-  cursor: pointer;
-}
-
-.user-name span {
-  margin-right: 16px;
-  font-size: 15px;
+.dropdown-user {
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -1078px -38px;
+  height: 20px;
+  width: 15px;
+  margin-top: 15px;
 }
 </style>

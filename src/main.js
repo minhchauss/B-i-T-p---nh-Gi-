@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";
+// import { svgSpriteDirectivePlugin } from 'vue-svg-sprite'
 
 library.add(faUserSecret);
 library.add(fas);
@@ -19,14 +20,15 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.config.productionTip = false;
 //Xác định các router
 const routes = [
-  { path: "/Khach-hang", component: Customer },
-  { path: "/Nhan-vien", component: Employee },
+    { path: "/Khach-hang", component: Customer },
+    { path: "/Nhan-vien", component: Employee },
 ];
 //Tạo 1 đối tượng router và chuyển tùy chọn `routes`
 const router = new VueRouter({
-  routes, // short for `routes: routes`
+    routes, // short for `routes: routes`
 });
 
+// Vue.use(svgSpriteDirectivePlugin, { url: "../assets/img/loading.svg", class: 'my-class' } /* options */ );
 Vue.use(VueMask);
 Vue.use(money, { precision: 4 });
 Vue.use(VueCurrencyInput);
@@ -34,6 +36,6 @@ Vue.use(VueCurrencyInput);
 Vue.use(VueRouter);
 //Tạo 1 đối tượng gốc
 new Vue({
-  router,
-  render: (h) => h(App),
+    router,
+    render: (h) => h(App),
 }).$mount("#app");

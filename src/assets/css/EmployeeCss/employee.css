@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 22px 0px 16px;
 }
 
 .page-title .page-right {
@@ -14,18 +15,25 @@
     font-weight: bold;
 }
 
+.content-employee {
+    background-color: #ffffff;
+}
+
 .toolbar {
-    margin-top: 16px;
-    display: flex;
-    width: 100%;
     align-items: center;
-    height: 42px;
-    /* background-color: #ff0000; */
-    justify-content: space-between;
+    height: 36px;
+    padding: 16px 0px 10px 16px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    width: calc(100% - 56px);
+    right: -200px;
+    left: 20px;
+    z-index: 1;
 }
 
 .toolbarButton {
-    width: 150px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,19 +49,37 @@
 
 .grid {
     position: absolute;
-    right: 24px;
-    left: 24px;
-    bottom: 60px;
-    top: 128px;
+    bottom: 70px;
+    top: 140px;
     overflow-y: auto;
+    background-color: #ffffff;
+    /* overflow: auto; */
+    width: calc(100% - 60px);
+    right: 0px;
+    left: 20px;
+    padding-left: 20px;
+}
+
+#tblListEmployee {
+    margin-right: 0;
+    width: 100%;
+}
+
+.grid #tblListEmployee th {
+    font-size: 13px !important;
+}
+
+#tblListEmployee thead {
+    overflow-y: hidden;
 }
 
 .paging {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     height: 60px;
-    left: 24px;
-    right: 24px;
+    left: 20px;
+    right: 0;
+    width: calc(100% - 40px);
 }
 
 .m-col {
@@ -61,7 +87,6 @@
     padding: 0;
     box-sizing: border-box;
     padding: 0;
-    width: 49%;
 }
 
 .tittleDialog {
@@ -94,25 +119,34 @@ table {
 }
 
 table tr {
-    border-bottom: 1px solid #bbb;
+    /* border: 1px solid #bbb; */
     height: 48px;
+    overflow: hidden;
 }
 
-table thead th {
+.grid table thead tr {
     text-align: center;
     position: sticky;
     top: 0;
-    background-color: #fff;
-    border-bottom: 1px solid #bbb;
+    background-color: #e5e5e5;
     box-shadow: 0 1px 1px -1px #bbb;
+    overflow: hidden;
+}
+
+.grid table thead tr th {
+    background-color: #e5e5e5;
+    border-right: 1px solid #bbb;
+    /* border-bottom: 1px solid #bbb; */
+    z-index: 1;
 }
 
 table thead {
-    border-bottom: 1px solid #bbb;
+    background: #bbb;
 }
 
 tbody tr td {
     text-align: left;
+    border-right: 1px dotted #bbb;
 }
 
 th,
@@ -142,9 +176,71 @@ table tr {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: #019138;
 }
 
 #btnAdd img {
     vertical-align: middle;
     margin-right: 10px;
+}
+
+.group-btn-delete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-delete-row {
+    border: none;
+    background: transparent;
+    color: #0075c0;
+    width: 30px;
+    padding: 0;
+}
+
+.btn-delete-row:hover {
+    background: none;
+}
+
+.btn-delete-row:focus {
+    background: none;
+}
+
+.list-select-down {
+    height: 10px;
+    width: 10px;
+    cursor: pointer;
+}
+
+.arrow-down-list-delete {
+    border-top-color: #0075c0;
+}
+
+.list-arrow-delete {
+    border: 1px solid #bbbbbb;
+    background: #ffffff;
+    color: #000000;
+    width: 100px;
+    justify-content: center;
+    align-items: center;
+    right: 80px;
+    display: none;
+    top: 10px;
+    position: relative;
+}
+
+.list-select-down:focus .list-arrow-delete {
+    display: block;
+}
+
+.select-list-item {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+}
+
+.select-list-item:hover {
+    background: #e5e5e5;
+    color: #019138;
 }

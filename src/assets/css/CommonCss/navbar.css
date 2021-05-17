@@ -1,0 +1,73 @@
+#navbar {
+    width: 200px;
+    height: auto;
+    top: 0;
+    position: absolute;
+    background-color: #38393d;
+    z-index: 1;
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.logo-box .sidebar img {
+    height: 30px;
+    width: 30px;
+    color: #ffffff !important;
+    margin-left: 20px;
+}
+
+.logo-box h3 {
+    color: #ffffff;
+    margin-left: 5px;
+}
+
+.logo-box .logo {
+    margin-left: 8px;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    background-image: url("../../img/favicon.png");
+    background-size: contain;
+    background-position: left;
+    background-repeat: no-repeat;
+}
+
+.navbar-box .navbar-item {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0;
+    color: #ffffff;
+}
+
+.navbar-box .navbar-item:hover {
+    background-color: #bbb;
+    cursor: pointer;
+}
+
+.navbar-item .navbar-icon {
+    margin-left: 16px;
+    width: 30px;
+    height: 30px;
+    border-color: #ffffff;
+    margin-top: 10px;
+}
+
+.navbar-item .navbar-text {
+    margin-left: 10px;
+}
+
+a.navbar-item:hover {
+    cursor: pointer;
+}
+
+.navbar-box .navbar-item:focus {
+    background-color: #bbb;
+    color: white;
+}

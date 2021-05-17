@@ -6,11 +6,19 @@
     bottom: 0;
     background-color: #000000;
     opacity: .4;
+    z-index: 1;
 }
 
 .dialog .dialog-header {
+    width: auto;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    font-weight: 500;
+}
+
+.dialog-header input {
+    padding-left: 10px;
 }
 
 .dialog .dialog-content {
@@ -25,7 +33,7 @@
     padding-bottom: 59px;
     font-weight: bold;
     font-size: 13px;
-    z-index: 1;
+    z-index: 100;
 }
 
 .dialog .dialog-title {
@@ -60,12 +68,13 @@
     display: flex;
     align-items: center;
     bottom: 0;
-    background-color: #E9EBEE;
+    background-color: #ffffff;
     height: 60px;
     border-radius: 0 0 4px 4px;
     left: 0;
     right: 0;
-    justify-content: flex-end;
+    justify-content: space-between;
+    padding: 0 0 0 24px;
 }
 
 .dialog .dialog-footer button {
@@ -80,6 +89,7 @@
     display: flex;
     justify-content: space-between;
     padding: 24px 0 24px 0;
+    border-bottom: 1px solid #000;
 }
 
 .avatar {
@@ -100,9 +110,9 @@
 }
 
 .insertInfor {
-    width: calc(100% - 170px);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .m-col span {
@@ -135,7 +145,6 @@
     align-items: center;
     position: absolute;
     bottom: 40px;
-    margin-left: 50px;
 }
 
 .valid-tooltip {
